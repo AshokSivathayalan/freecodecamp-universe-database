@@ -81,41 +81,6 @@ ALTER SEQUENCE public.galaxy_id_seq OWNED BY public.galaxy.galaxy_id;
 
 
 --
--- Name: galaxy_type; Type: TABLE; Schema: public; Owner: freecodecamp
---
-
-CREATE TABLE public.galaxy_type (
-    galaxy_type_id integer NOT NULL,
-    name character varying(30) NOT NULL,
-    frequency text
-);
-
-
-ALTER TABLE public.galaxy_type OWNER TO freecodecamp;
-
---
--- Name: galaxy_types_galaxy_type_id_seq; Type: SEQUENCE; Schema: public; Owner: freecodecamp
---
-
-CREATE SEQUENCE public.galaxy_types_galaxy_type_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.galaxy_types_galaxy_type_id_seq OWNER TO freecodecamp;
-
---
--- Name: galaxy_types_galaxy_type_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: freecodecamp
---
-
-ALTER SEQUENCE public.galaxy_types_galaxy_type_id_seq OWNED BY public.galaxy_type.galaxy_type_id;
-
-
---
 -- Name: moon; Type: TABLE; Schema: public; Owner: freecodecamp
 --
 
@@ -151,6 +116,42 @@ ALTER TABLE public.moon_moon_id_seq OWNER TO freecodecamp;
 --
 
 ALTER SEQUENCE public.moon_moon_id_seq OWNED BY public.moon.moon_id;
+
+
+--
+-- Name: physical_feature; Type: TABLE; Schema: public; Owner: freecodecamp
+--
+
+CREATE TABLE public.physical_feature (
+    name character varying(30) NOT NULL,
+    planet_id integer NOT NULL,
+    type character varying(30),
+    physical_feature_id integer NOT NULL
+);
+
+
+ALTER TABLE public.physical_feature OWNER TO freecodecamp;
+
+--
+-- Name: physical_features_physical_feature_id_seq; Type: SEQUENCE; Schema: public; Owner: freecodecamp
+--
+
+CREATE SEQUENCE public.physical_features_physical_feature_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.physical_features_physical_feature_id_seq OWNER TO freecodecamp;
+
+--
+-- Name: physical_features_physical_feature_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: freecodecamp
+--
+
+ALTER SEQUENCE public.physical_features_physical_feature_id_seq OWNED BY public.physical_feature.physical_feature_id;
 
 
 --
@@ -236,17 +237,17 @@ ALTER TABLE ONLY public.galaxy ALTER COLUMN galaxy_id SET DEFAULT nextval('publi
 
 
 --
--- Name: galaxy_type galaxy_type_id; Type: DEFAULT; Schema: public; Owner: freecodecamp
---
-
-ALTER TABLE ONLY public.galaxy_type ALTER COLUMN galaxy_type_id SET DEFAULT nextval('public.galaxy_types_galaxy_type_id_seq'::regclass);
-
-
---
 -- Name: moon moon_id; Type: DEFAULT; Schema: public; Owner: freecodecamp
 --
 
 ALTER TABLE ONLY public.moon ALTER COLUMN moon_id SET DEFAULT nextval('public.moon_moon_id_seq'::regclass);
+
+
+--
+-- Name: physical_feature physical_feature_id; Type: DEFAULT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.physical_feature ALTER COLUMN physical_feature_id SET DEFAULT nextval('public.physical_features_physical_feature_id_seq'::regclass);
 
 
 --
@@ -276,19 +277,6 @@ INSERT INTO public.galaxy VALUES (2, 'Andromeda', 'The nearest large galaxy', 25
 
 
 --
--- Data for Name: galaxy_type; Type: TABLE DATA; Schema: public; Owner: freecodecamp
---
-
-INSERT INTO public.galaxy_type VALUES (1, 'Barred Spiral Galaxy', NULL);
-INSERT INTO public.galaxy_type VALUES (2, 'Grand-Design Spiral Galaxy', NULL);
-INSERT INTO public.galaxy_type VALUES (3, 'Magellanic Spiral', NULL);
-INSERT INTO public.galaxy_type VALUES (4, 'Starburst Galaxy', NULL);
-INSERT INTO public.galaxy_type VALUES (6, 'Satellite Galaxy', NULL);
-INSERT INTO public.galaxy_type VALUES (7, 'Interacting Galaxy', NULL);
-INSERT INTO public.galaxy_type VALUES (5, 'Spiral Galaxy', 'Medium');
-
-
---
 -- Data for Name: moon; Type: TABLE DATA; Schema: public; Owner: freecodecamp
 --
 
@@ -314,6 +302,18 @@ INSERT INTO public.moon VALUES (12, 'Umbriel', NULL, 9, 585, true);
 INSERT INTO public.moon VALUES (13, 'Miranda', NULL, 9, 236, true);
 INSERT INTO public.moon VALUES (14, 'Ariel', NULL, 9, 579, true);
 INSERT INTO public.moon VALUES (15, 'Triton', NULL, 10, 1353, true);
+
+
+--
+-- Data for Name: physical_feature; Type: TABLE DATA; Schema: public; Owner: freecodecamp
+--
+
+INSERT INTO public.physical_feature VALUES ('Mount Everest', 1, 'Mountain', 1);
+INSERT INTO public.physical_feature VALUES ('Mariana Trench', 1, 'Trench', 2);
+INSERT INTO public.physical_feature VALUES ('Olympus Mons', 2, 'Mountain', 3);
+INSERT INTO public.physical_feature VALUES ('Abeona Mons', 3, 'Mountain', 4);
+INSERT INTO public.physical_feature VALUES ('Apollodorus', 4, 'Crater', 5);
+INSERT INTO public.physical_feature VALUES ('Brinton', 12, 'Crater', 6);
 
 
 --
@@ -354,17 +354,17 @@ SELECT pg_catalog.setval('public.galaxy_id_seq', 6, true);
 
 
 --
--- Name: galaxy_types_galaxy_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: freecodecamp
---
-
-SELECT pg_catalog.setval('public.galaxy_types_galaxy_type_id_seq', 7, true);
-
-
---
 -- Name: moon_moon_id_seq; Type: SEQUENCE SET; Schema: public; Owner: freecodecamp
 --
 
 SELECT pg_catalog.setval('public.moon_moon_id_seq', 22, true);
+
+
+--
+-- Name: physical_features_physical_feature_id_seq; Type: SEQUENCE SET; Schema: public; Owner: freecodecamp
+--
+
+SELECT pg_catalog.setval('public.physical_features_physical_feature_id_seq', 6, true);
 
 
 --
@@ -398,22 +398,6 @@ ALTER TABLE ONLY public.galaxy
 
 
 --
--- Name: galaxy_type galaxy_types_galaxy_type_id_key; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
---
-
-ALTER TABLE ONLY public.galaxy_type
-    ADD CONSTRAINT galaxy_types_galaxy_type_id_key UNIQUE (galaxy_type_id);
-
-
---
--- Name: galaxy_type galaxy_types_pkey; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
---
-
-ALTER TABLE ONLY public.galaxy_type
-    ADD CONSTRAINT galaxy_types_pkey PRIMARY KEY (galaxy_type_id);
-
-
---
 -- Name: moon moon_moon_id_key; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
 --
 
@@ -427,6 +411,22 @@ ALTER TABLE ONLY public.moon
 
 ALTER TABLE ONLY public.moon
     ADD CONSTRAINT moon_pkey PRIMARY KEY (moon_id);
+
+
+--
+-- Name: physical_feature physical_features_name_key; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.physical_feature
+    ADD CONSTRAINT physical_features_name_key UNIQUE (name);
+
+
+--
+-- Name: physical_feature physical_features_pkey; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.physical_feature
+    ADD CONSTRAINT physical_features_pkey PRIMARY KEY (physical_feature_id);
 
 
 --
@@ -470,6 +470,14 @@ ALTER TABLE ONLY public.moon
 
 
 --
+-- Name: physical_feature physical_features_planet_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.physical_feature
+    ADD CONSTRAINT physical_features_planet_id_fkey FOREIGN KEY (planet_id) REFERENCES public.planet(planet_id);
+
+
+--
 -- Name: planet planet_star_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: freecodecamp
 --
 
@@ -488,4 +496,3 @@ ALTER TABLE ONLY public.star
 --
 -- PostgreSQL database dump complete
 --
-
